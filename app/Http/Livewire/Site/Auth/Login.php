@@ -36,7 +36,6 @@ class Login extends Component
             'password' => 'required',
         ]);
 
-
         $user = User::where('email', $this->email)->first();
 
         if (Hash::check($this->password, $user->password)) {

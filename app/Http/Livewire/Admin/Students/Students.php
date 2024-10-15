@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\UserLesson;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Exports\StudentsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Students extends Component
 {
@@ -16,13 +18,16 @@ class Students extends Component
 
     protected $listeners = ['refreshModal'];
 
-    public $search, $name, $email, $mobile, $deleteId, $student_id, $role_id, $role, $create_student, $array,$levels, $level_id ,$username;
+    public $search, $name, $email, $mobile, $deleteId, $student_id, $role_id, $role, $create_student, $array,$levels, $level_id,$status_id ,$username, $search_all;
 
     public function mount()
     {
         $this->levels = Level::get();
     }
-
+    public function export()
+    {
+        return Excel::download(new StudentsExport, 'students.xlsx');
+    }
     public function search()
     {
         $this->resetPage();
@@ -73,34 +78,56 @@ class Students extends Component
     {
         $students = User::query();
         $students = $students->role('Student');
+        if ($this->search_all) {
+            $students = $students->where(function($query) {
+                $query->where('name', 'LIKE', '%' . $this->search_all . '%')
+                      ->orWhere('username', 'LIKE', '%' . $this->search_all . '%')
+                      ->orWhere('email', 'LIKE', '%' . $this->search_all . '%')
+                      ->orWhere('mobile', 'LIKE', '%' . $this->search_all . '%')
+                      ->orWhereHas('level', function($q) {
+                          $q->where('name', 'LIKE', '%' . $this->search_all . '%');
+                      });
+            });
+        }
 
-        if ($this->name) {
+        if ($this->status_id ) {
+            if($this->status_id===3){
+                $this->status_id = 0;
+            }
+            $students = $students->where('status',  $this->status_id);
+        }
+
+        if ($this->name ) {
             $students = $students->where('name', 'LIKE', '%' . $this->name . '%');
         }
+
         if ($this->username) {
             $students = $students->where('username', 'LIKE', '%' . $this->username . '%');
         }
+
         if ($this->email) {
             $students = $students->where('email', 'LIKE', '%' . $this->email . '%');
         }
+
         if ($this->mobile) {
             $students = $students->where('mobile', 'LIKE', '%' . $this->mobile . '%');
         }
+        
         if ($this->level_id) {
             $students = $students->where('level_id', $this->level_id);
         }
 
         $students = $students->orderBy('created_at', "DESC")->paginate(10);
-     
-     
+
+
         $students->getCollection()->transform(function ($user) {
             $userLesson = UserLesson::where('user_id', $user->id)->count();
             $user->lesson_motabaky = $user->lesson_count -  $userLesson;
 
             return $user;
         });
-     
-     
+
+
         return view('livewire.admin.students.students', compact('students'))->layout('layouts.admins.app');
     }
 

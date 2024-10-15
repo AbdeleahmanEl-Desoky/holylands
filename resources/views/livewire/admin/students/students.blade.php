@@ -6,6 +6,9 @@
             <h2 class="text-primary">{{__("Students")}}</h2>
             <div class="row g-0 mb-3">
                 <div class="col-md-3 align-self-end">
+                    <a class="btn btn-primary" href="{{ route('students.export') }}">
+                        <i class="fa fa-download"></i> Download Excel
+                    </a>
                     <div class="d-inline">
                         @if(auth()->user()->can('students create') )
                             <a class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#CreateStudent"
@@ -16,6 +19,13 @@
                 </div>
                 <div class="col-md-9">
                     <form class="row g-1 justify-content-end" wire:submit.prevent="search">
+                        <div class="col-md-2 col-sm-7">
+                            <label class="text-primary mb-1" for="PatientName">{{__("البحث")}} </label>
+                            <input type="text" wire:model.defer="search_all" class="form-control border-primary"
+                                   placeholder="البحث"
+                                   id="PatientName">
+                        </div>
+
                         <div class="col-md-2 col-sm-7">
                             <label class="text-primary mb-1" for="PatientName">{{__("Name")}} </label>
                             <input type="text" wire:model.defer="name" class="form-control border-primary"
@@ -28,6 +38,17 @@
                                    placeholder="البحث بالاسم"
                                    id="PatientName">
                         </div>
+
+                        <div class="col-md-2 col-sm-7">
+                            <label for="WaitingList" class="text-primary mb-1">{{__("Status")}}</label>
+                            <select class="form-select border-primary" wire:model.defer="status_id">
+                                <option value="">{{__("Select")}} ...</option>
+                                <option value="3">{{ __('Awaiting review')}}</option>
+                                <option value="1">{{ __('Acceptable')}}</option>
+                                <option value="2">{{ __('Disabled')}}</option>
+                            </select>
+                        </div>
+
                         <div class="col-md-2 col-sm-7">
                             <label class="text-primary mb-1" for="PatientName">{{__("Email")}} </label>
                             <input type="text" wire:model.defer="email" class="form-control border-primary"
@@ -89,6 +110,9 @@
                                 <div class="bg-primary rounded-2 text-white py-2 px-1">عدد الحصص المتبقية</div>
                             </th>
                             <th scope="col" class="text-center p-1">
+                                <div class="bg-primary rounded-2 text-white py-2 px-1">المستوي</div>
+                            </th>
+                            <th scope="col" class="text-center p-1">
                                 <div class="bg-primary rounded-2 text-white py-2 px-1">{{__("Role")}}</div>
                             </th>
 
@@ -131,8 +155,13 @@
                                 </td>
 
                                 <td class="text-center p-1">
+                                    <div class="table-os">{{$student->level->name}}</div>
+                                </td>
+
+                                <td class="text-center p-1">
                                     <div class="table-os">{{ __($student->roles->pluck('name')->implode(',')) }}</div>
                                 </td>
+
                                 <td class="text-center p-1">
                                     <div class="table-os">
 

@@ -54,6 +54,7 @@ Route::prefix('admin')->group(function () {
 
         Route::prefix('students')->group(function () {
             Route::get('/', \App\Http\Livewire\Admin\Students\Students::class)->middleware('permission:students show')->name('admin.students');
+            Route::get('/export', [\App\Http\Livewire\Admin\Students\Students::class, 'export'])->name('students.export');
         });
 
         Route::prefix('students-reports')->group(function () {
