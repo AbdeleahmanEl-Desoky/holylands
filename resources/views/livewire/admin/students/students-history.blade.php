@@ -44,9 +44,9 @@
                 @endforeach
                 </tbody>
             </table>
-            <div class="pt-2">
-                {{$users->links()}}
-            </div>
+            {{-- <div class="pt-2"> --}}
+                {{-- {{$users->links()}}
+            </div> --}}
         @else
             <div class="text-center e404 py-3">
                 <img width="210" class="img-fluid mb-3" src="{{asset('dashboard/images/error.svg')}}" alt="">

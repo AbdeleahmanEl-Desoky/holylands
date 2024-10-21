@@ -18,7 +18,7 @@ class StudentsHistory extends Component
 
     public function mount($id)
     {
-        $this->userData = HistoryUser::with('user')->where('student_id', $id)->orderByDesc('id')->paginate(10); // Assign to $userData
+        $this->userData = HistoryUser::with('user')->where('student_id', $id)->orderByDesc('id')->get(); // Assign to $userData
     }
 
     public function render()
