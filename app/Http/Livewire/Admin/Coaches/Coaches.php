@@ -35,7 +35,10 @@ class Coaches extends Component
     {
         $this->coach_id = $id;
     }
-
+    public function HistoryCoach($id)
+    {
+        $this->coach_id = $id;
+    }
     public function CreateCoach()
     {
         $this->create_coach = rand(0, 10000);

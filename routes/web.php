@@ -49,6 +49,7 @@ Route::prefix('admin')->group(function () {
 
         Route::prefix('coaches-reports')->group(function () {
             Route::get('/', \App\Http\Livewire\Admin\Reports\ReportsCoach::class)->middleware('permission:reports show')->name('admin.coaches-reports');
+            // Route::get('/history', \App\Http\Livewire\Admin\Reports\StudentsHistory::class)->middleware('permission:reports show')->name(name: 'admin.coaches-history');
             Route::get('/print', \App\Http\Livewire\Admin\Reports\PrintCoach::class)->middleware('permission:reports print')->name('admin.coaches-print');
         });
 
@@ -59,7 +60,7 @@ Route::prefix('admin')->group(function () {
 
         Route::prefix('students-reports')->group(function () {
             Route::get('/', \App\Http\Livewire\Admin\Reports\ReportsUser::class)->middleware('permission:reports show')->name('admin.students-reports');
-            Route::get('/history', \App\Http\Livewire\Admin\Reports\StudentsHistory::class)->middleware('permission:reports show')->name('admin.students-history');
+            Route::get('/history', \App\Http\Livewire\Admin\Reports\StudentsHistory::class)->middleware('permission:reports show')->name(name: 'admin.students-history');
             Route::get('/print', \App\Http\Livewire\Admin\Reports\PrintUser::class)->middleware('permission:reports print')->name('admin.students-print');
         });
 

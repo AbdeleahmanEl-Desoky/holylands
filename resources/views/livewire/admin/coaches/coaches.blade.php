@@ -120,6 +120,11 @@
 {{--                                                <i class="fa-solid fa-eye"></i>--}}
 {{--                                            </a>--}}
 {{--                                        @endif--}}
+                                    <a class="btn btn-sm mx-1 btn-light"
+                                    href="#" data-bs-toggle="modal" data-bs-target="#HistoryCoach"
+                                    wire:click="HistoryCoach({{$coach->id}})"
+                                    title="{{__("history")}}"><i class="fa-solid fa-clock-rotate-left"></i> </a>
+
                                         @if(auth()->user()->can('coaches edit') )
                                             <a class="btn btn-sm mx-1 btn-primary"
                                                href="#" data-bs-toggle="modal" data-bs-target="#EditCoach"
@@ -181,6 +186,31 @@
         </div>
         <!--  Modal CreateCoach -->
     @endif
+
+    <div wire:ignore.self class="modal fade " id="HistoryCoach" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title text-center" id="exampleModalLongTitle">{{ __('History Student') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div wire:loading>
+                            <i class="fas fa-sync fa-spin"></i>
+                            {{__("Loading please wait")}} ...
+                        </div>
+                    </div>
+                    @if($coach_id)
+                        @livewire('admin.coaches.coaches-history',[$coach_id])
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
 
     @if(auth()->user()->can('coaches edit'))
 
