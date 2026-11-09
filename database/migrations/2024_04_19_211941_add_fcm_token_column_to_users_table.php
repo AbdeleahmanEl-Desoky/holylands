@@ -15,7 +15,7 @@ class AddFcmTokenColumnToUsersTable extends Migration
     {
         
             Schema::table('users', function (Blueprint $table) {
-                $table->string('fcm_token');
+                // $table->string('fcm_token');
             });
         
     }
@@ -28,7 +28,7 @@ class AddFcmTokenColumnToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('fcm_token');
+            // $table->dropColumn('fcm_token');
         });
     }
 }

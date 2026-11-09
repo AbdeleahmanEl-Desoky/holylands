@@ -1,17 +1,21 @@
 <div>
     <div class="container-fluid py-3 mt-4">
         @include('layouts.admins.alert')
+
         <div class="main h-100">
-            <h4 class="text-primary">اسم الدرس /  <span>{{$lesson->name}}</span> / <span class="text-danger">{{__("Lessons Show")}}</span> </h4>
+            <h4 class="text-primary">اسم الدرس / <span>{{$lesson->name}}</span> / <span class="text-danger">{{ __("Lessons Show") }}</span></h4>
+
             <div class="row g-0 mb-3">
                 <div class="col-md-3 align-self-end">
                     <div class="d-inline">
-
+                        <!-- Optional actions here -->
                     </div>
                 </div>
                 <div class="col-md-9">
+                    <!-- Optional filters here -->
                 </div>
             </div>
+
             <div class="table-responsive pb-3">
                 @if($user_lessons->count() > 0)
                     <table class="table table-borderless mb-md-5">
@@ -24,7 +28,10 @@
                                 <div class="bg-primary rounded-2 text-white py-2 px-1">اسم الطالب</div>
                             </th>
                             <th scope="col" class="text-center p-1">
-                                <div class="bg-primary rounded-2 text-white py-2 px-1">{{__("attendance")}}</div>
+                                <div class="bg-primary rounded-2 text-white py-2 px-1">{{ __("attendance") }}</div>
+                            </th>
+                            <th scope="col" class="text-center p-1">
+                                <div class="bg-primary rounded-2 text-white py-2 px-1">حذف</div>
                             </th>
                         </tr>
                         </thead>
@@ -32,10 +39,10 @@
                         @foreach($user_lessons as $key => $user_lesson)
                             <tr>
                                 <td class="text-center p-1">
-                                    <div class="table-os">{{ $key+1 }}</div>
+                                    <div class="table-os">{{ $key + 1 }}</div>
                                 </td>
                                 <td class="text-center p-1">
-                                    <div class="table-os">{{$user_lesson->user ? $user_lesson->user->name : ''}}</div>
+                                    <div class="table-os">{{ $user_lesson->user ? $user_lesson->user->name : '' }}</div>
                                 </td>
                                 <td class="text-center p-1">
                                     <div class="table-os">
@@ -44,7 +51,14 @@
                                         @else
                                             <i class="fa-solid fa-xmark text-danger fw-bold"></i>
                                         @endif
-                                       </div>
+                                    </div>
+                                </td>
+                                <td class="text-center p-1">
+                                    <button wire:click="deleteStudent({{ $user_lesson->id }})"
+                                            class="btn btn-sm btn-danger"
+                                            onclick="return confirm('هل أنت متأكد من حذف الطالب من الدرس؟')">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -52,12 +66,11 @@
                     </table>
                 @else
                     <div class="text-center e404 py-3">
-                        <img width="210" class="img-fluid mb-3" src="{{asset('dashboard/images/error.svg')}}" alt="">
-                        <h4>{{__("Empty list")}}</h4>
+                        <img width="210" class="img-fluid mb-3" src="{{ asset('dashboard/images/error.svg') }}" alt="">
+                        <h4>{{ __("Empty list") }}</h4>
                     </div>
                 @endif
             </div>
         </div>
     </div>
-
 </div>

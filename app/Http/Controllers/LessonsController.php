@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Lessons\BookLessonAction;
+use App\DTOs\Lessons\BookLessonDto;
 use App\Models\Lesson;
 use App\Models\UserLesson;
 use App\Models\User;
@@ -14,6 +16,12 @@ use App\Services\FCM\FCMService;
 class LessonsController extends Controller
 {
 
+        // $students->getCollection()->transform(function ($user) {
+        //     $userLesson = UserLesson::where('user_id', $user->id)->count();
+        //     $user->lesson_motabaky = $user->lesson_count -  $userLesson;
+
+        //     return $user;
+        // });
 
     public function index()
     {
@@ -162,61 +170,12 @@ class LessonsController extends Controller
         ]);
     }
 
-    public function booking($lesson_id)
+    public function booking($lesson_id, BookLessonAction $action)
     {
-        $lesson = Lesson::where(['id' => $lesson_id, 'coach_id' => auth('sanctum')->user()->coach_id])->first();
-
-        if (!$lesson) {
-            return response()->json(['message' => 'عذرا , الدرس غير موجود حاليا', 'status' => false, 'data' => null]);
-        }
-
-        if (!in_array($lesson->id, auth('sanctum')->user()->lessons()->pluck('lesson_id')->toArray())) {
-
-            $users_lesson_count = UserLesson::query()->whereIn('lesson_id', [$lesson_id])->count();
-            $user_lesson_count = auth('sanctum')->user()->lesson_count;
-            $all_lessons_user = auth('sanctum')->user()->lessons()->pluck('lesson_id')->toArray();
-
-            if ($users_lesson_count >= $lesson->number_students) {
-                return response()->json(['message' => 'عذرا , عدد الطلاب مكتمل', 'status' => false, 'data' => null]);
-            }
-
-            if (count($all_lessons_user) >= $user_lesson_count) {
-                return response()->json(['message' => 'عذرا , لقد تجاوزت العدد المسموح من الحصص ', 'status' => false, 'data' => null]);
-            }
-
-            
-            $users = User::where('id',auth('sanctum')->id())->first();
-            $FcmTokens = User::where('id',auth('sanctum')->user()->coach_id)->pluck('fcm_token');
-            $title = 'تم حجز درس جديد من';
-            $body = $title . ' '.'الطالب' .' '. $users->name;
-
-
-            $fcm = new FCMService();
-            $fcm->sendNotification($FcmTokens,$title,$body);
-
-            Notification::create([
-                'title' => $title,
-                'description' => $body,
-                'user_id' => auth('sanctum')->user()->coach_id,
-            ]);
-
-            $booking = UserLesson::create([
-                'lesson_id' => $lesson->id,
-                'level_id' => $lesson->level_id,
-                'user_id' => auth('sanctum')->id(),
-                'coach_id' => $lesson->coach_id,
-                'number_hours' => $lesson->number_hours,
-                'time_end' => Carbon::now()->addHours(3)->toDateTimeString(),
-            ]);
-        } else {
-            return response()->json(['message' => 'عذرا , لقد حجزت الدرس من قبل', 'status' => false, 'data' => null]);
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => "success",
-            'data' => $booking
-        ]);
+        return response()->json($action->execute(new BookLessonDto(
+            auth('sanctum')->id(),
+            (int) $lesson_id,
+        )));
     }
 
     public function booking_cancel($lesson_id)

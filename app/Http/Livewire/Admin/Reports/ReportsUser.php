@@ -18,7 +18,6 @@ class ReportsUser extends Component
 
 
     public $search,$user_id, $students ,$levels ,$level_id;
-
     public function search()
     {
 
@@ -49,7 +48,9 @@ class ReportsUser extends Component
         if ($this->level_id) {
             $users = $users->where('level_id', $this->level_id);
         }
-
+        if ($this->search) {
+            $users = $users->where('name', 'like', '%' . $this->search . '%');
+        }
         $users = $users->orderBy('created_at', "DESC")->paginate(40);
 
         

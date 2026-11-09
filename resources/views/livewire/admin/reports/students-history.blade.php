@@ -59,7 +59,7 @@
                 @foreach($users as $key => $user)
                     <tr>
                         <td class="text-center p-1">
-                            <div class="table-os">{{ $key++ }}</div>
+                       <div class="table-os">{{ $users->firstItem() + $key }}</div>
                         </td>
                         <td class="text-center p-1">
                             <div class="table-os">
@@ -111,7 +111,7 @@
                 </tbody>
             </table>
             <div class="pt-2">
-                {{$users->links()}}
+{{ $users->appends(['user_id' => $user_id])->links('pagination::bootstrap-4') }}
             </div>
         @else
             <div class="text-center e404 py-3">

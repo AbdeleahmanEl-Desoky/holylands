@@ -40,6 +40,12 @@
                                 @endforeach
                             </select>
                         </div>
+                        
+                        <div class="col-md-4 col-sm-7">
+                            <label for="search" class="text-primary mb-1">اسم الطالب (بحث)</label>
+                            <input type="text" wire:model.debounce.500ms="search" class="form-control border-primary" placeholder="ابحث بالاسم...">
+                        </div>
+                        
                         <div class="col-md-1 col-sm-2 col-2 align-self-end">
                             <button type="submit" wire:loading.attr="disabled" class="btn btn-primary py-2 w-100">
                                 <i wire:loading class="fas fa-sync fa-spin"></i>

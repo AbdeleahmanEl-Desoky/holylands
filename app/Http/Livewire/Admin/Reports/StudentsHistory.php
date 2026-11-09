@@ -37,7 +37,7 @@ class StudentsHistory extends Component
         
         return view('livewire.admin.reports.students-history', [
             'users' => $historyUser,
-            'user_name' =>$user_name->name
+            'user_name' =>$user_name?->name ??" - "
         ])->layout('layouts.admins.app');
     }
 }

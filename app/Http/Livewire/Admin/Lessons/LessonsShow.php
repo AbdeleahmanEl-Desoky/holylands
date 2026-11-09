@@ -8,14 +8,12 @@ use Livewire\Component;
 
 class LessonsShow extends Component
 {
-    public $lesson ,$user_lessons;
+    public $lesson, $user_lessons;
 
-    function mount($id)
+    public function mount($id)
     {
         $this->lesson = Lesson::findOrFail($id);
-
-        $this->user_lessons = UserLesson::query()->where('lesson_id',$id)->get();
-
+        $this->user_lessons = UserLesson::where('lesson_id', $id)->get();
     }
 
     public function render()
@@ -23,4 +21,16 @@ class LessonsShow extends Component
         return view('livewire.admin.lessons.lessons-show')->layout('layouts.admins.app');
     }
 
+    public function deleteStudent($id)
+    {
+        $userLesson = UserLesson::find($id);
+
+        if ($userLesson && $userLesson->lesson_id == $this->lesson->id) {
+            $userLesson->delete();
+            $this->user_lessons = UserLesson::where('lesson_id', $this->lesson->id)->get();
+            session()->flash('success', 'تم حذف الطالب من الدرس بنجاح.');
+        } else {
+            session()->flash('error', 'فشل الحذف. الطالب غير موجود.');
+        }
+    }
 }
